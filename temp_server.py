@@ -117,6 +117,9 @@ async def cors_mw(request, handler):
     return resp
 
 # ---------- HTTP 路由 ----------
+async def index(request):   # host website
+    return web.FileResponse("./index.html")
+
 async def api_health(request):  # GET /api/health
     return web.json_response({"ok": True, "time": time.time()})
 
@@ -245,6 +248,7 @@ async def api_sse(request):     # GET /api/sse
 def make_app():
     app = web.Application(middlewares=[cors_mw])
     app.add_routes([
+        web.get("/", index),
         web.get("/api/health", api_health),
         web.get("/api/temps",  api_all),
         web.get("/api/temps/{uid}", api_one),
