@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>实时温度监控</title>
+  <title>Real-time Temperature Monitoring</title>
   <style>
     :root { --ok:#28a745; --down:#dc3545; --link:#007bff; }
     body { font-family: Arial, sans-serif; max-width:1200px; margin:0 auto; padding:20px; line-height:1.6; }
@@ -56,66 +56,66 @@
   </style>
 </head>
 <body>
-  <h1>实时温度监控</h1>
-  <p class="note">系统已自动处理重复投票：同一设备在统计周期内仅计其最近一次表态。</p>
+  <h1>Real-time Temperature Monitoring</h1>
+  <p class="note">The system automatically handles duplicate votes: only the most recent vote from each device is counted within the statistical period.</p>
 
   <div id="conn" class="conn ok" aria-live="polite">
     <span class="dot" aria-hidden="true"></span>
-    <span id="conn-text">实时连接正常</span>
+    <span id="conn-text">Live connection active</span>
   </div>
 
   <div class="stats">
-    <h3>温度投票统计结果</h3>
+    <h3>Temperature Voting Statistics</h3>
     <div class="stat-summary">
-      <p class="voting-status">在当前统计周期内，共有 <span class="device-count" id="total-devices">0</span> 台设备参与了投票</p>
-      <p>大多数人认为环境温度偏 <span id="dominant-vote">--</span></p>
+      <p class="voting-status">In the current statistical period, <span class="device-count" id="total-devices">0</span> devices have participated in voting</p>
+      <p>Most people feel the temperature is <span id="dominant-vote">--</span></p>
     </div>
 
     <div id="vote-stats">
-      <div class="stat-item"><span class="stat-label">感觉寒冷：</span><span class="stat-value" id="cold-count">0</span> 人</div>
-      <div class="stat-item"><span class="stat-label">感觉适宜：</span><span class="stat-value" id="conf-count">0</span> 人</div>
-      <div class="stat-item"><span class="stat-label">感觉温暖：</span><span class="stat-value" id="warm-count">0</span> 人</div>
-      <div class="stat-item"><span class="stat-label">统计周期：</span><span class="stat-value" id="time-window">5分钟</span></div>
-      <div class="stat-item"><span class="stat-label">数据更新时间：</span><span class="stat-value" id="update-time">--</span></div>
+      <div class="stat-item"><span class="stat-label">Feeling Cold:</span><span class="stat-value" id="cold-count">0</span> people</div>
+      <div class="stat-item"><span class="stat-label">Feeling Comfortable:</span><span class="stat-value" id="conf-count">0</span> people</div>
+      <div class="stat-item"><span class="stat-label">Feeling Warm:</span><span class="stat-value" id="warm-count">0</span> people</div>
+      <div class="stat-item"><span class="stat-label">Statistical Period:</span><span class="stat-value" id="time-window">5 minutes</span></div>
+      <div class="stat-item"><span class="stat-label">Last Update:</span><span class="stat-value" id="update-time">--</span></div>
     </div>
 
     <div id="stats-error" class="error" style="display:none;"></div>
     <div id="stats-debug" class="debug"></div>
 
     <div style="margin-top:15px;">
-      <button onclick="refreshVoteStats()" style="padding:6px 12px; background:var(--link); color:#fff; border:none; border-radius:4px; cursor:pointer;">刷新统计</button>
+      <button onclick="refreshVoteStats()" style="padding:6px 12px; background:var(--link); color:#fff; border:none; border-radius:4px; cursor:pointer;">Refresh Statistics</button>
       <select id="vote-window" onchange="refreshVoteStats()" style="margin-left:10px; padding:6px; border-radius:4px; border:1px solid #ddd;">
-        <option value="60">1分钟</option>
-        <option value="300" selected>5分钟</option>
-        <option value="600">10分钟</option>
-        <option value="1800">30分钟</option>
-        <option value="3600">1小时</option>
+        <option value="60">1 minute</option>
+        <option value="300" selected>5 minutes</option>
+        <option value="600">10 minutes</option>
+        <option value="1800">30 minutes</option>
+        <option value="3600">1 hour</option>
       </select>
     </div>
   </div>
 
-  <h2>设备状态列表</h2>
-  <div id="snapshot">加载中...</div>
+  <h2>Device Status List</h2>
+  <div id="snapshot">Loading...</div>
 
-  <h2>最新动态</h2>
+  <h2>Latest Updates</h2>
   <div id="updates"></div>
 
   <!-- 历史记录对话框 -->
   <dialog id="historyDialog" class="history-dialog" aria-labelledby="historyTitle">
     <form method="dialog" class="history-head">
-      <h3 id="historyTitle">历史记录</h3>
-      <button class="close-btn" aria-label="关闭">×</button>
+      <h3 id="historyTitle">History</h3>
+      <button class="close-btn" aria-label="Close">×</button>
     </form>
 
     <div class="history-content">
       <table class="history-table">
-        <thead><tr><th>时间</th><th>温度(°C)</th><th>投票</th></tr></thead>
-        <tbody id="historyTbody"><tr><td colspan="3">加载中…</td></tr></tbody>
+        <thead><tr><th>Time</th><th>Temperature(°C)</th><th>Vote</th></tr></thead>
+        <tbody id="historyTbody"><tr><td colspan="3">Loading…</td></tr></tbody>
       </table>
     </div>
 
     <div class="history-actions">
-      <button id="copyHistoryBtn" type="button">复制为 CSV</button>
+      <button id="copyHistoryBtn" type="button">Copy as CSV</button>
     </div>
   </dialog>
 
@@ -134,13 +134,13 @@
 
     sse.addEventListener('open', () => {
       conn.classList.remove('down'); conn.classList.add('ok');
-      connText.textContent = '实时连接正常';
+      connText.textContent = 'Live connection active';
     });
 
     sse.addEventListener('error', () => {
       // 浏览器通常会自动重连，但若遇到 4xx/5xx 可能不会；至少给用户提示。:contentReference[oaicite:4]{index=4}
       conn.classList.remove('ok'); conn.classList.add('down');
-      connText.textContent = '连接异常，尝试重连中…';
+      connText.textContent = 'Connection error, attempting to reconnect…';
     });
 
     sse.addEventListener('snapshot', (event) => {
@@ -149,7 +149,7 @@
         devicesCache = data.devices || [];
         renderDevices();
         refreshVoteStats();
-      } catch (err) { console.error('快照数据解析失败:', err); }
+      } catch (err) { console.error('Failed to parse snapshot data:', err); }
     });
 
     sse.addEventListener('temp', (event) => {
@@ -171,27 +171,27 @@
           refreshVoteStats();
           lastStatsUpdate = now;
         }
-      } catch (err) { console.error('实时数据处理失败:', err); }
+      } catch (err) { console.error('Failed to process real-time data:', err); }
     });
 
     // ===== UI 渲染 =====
     function renderDevices() {
       const box = document.getElementById('snapshot');
-      if (!devicesCache.length) { box.innerHTML = '<p>暂无设备连接</p>'; return; }
+      if (!devicesCache.length) { box.innerHTML = '<p>No devices connected</p>'; return; }
 
       let html = '<div class="devices-container">';
       for (const d of devicesCache) {
         const hasVoted = d.vote !== null && d.vote !== undefined;
-        const statusText = d.online ? '在线' : '离线';
+        const statusText = d.online ? 'Online' : 'Offline';
         const statusClass = d.online ? 'online' : 'offline';
         html += `
           <div class="device ${d.vote_tag || ''} ${hasVoted ? 'voted' : ''}">
-            <h3>设备 ${d.uid} ${hasVoted ? '<small>(已投票)</small>' : ''}</h3>
-            <p>当前温度: ${d.temp}°C</p>
-            <p>温度感受: ${getVoteText(d.vote)}</p>
-            <p>设备状态: <span class="${statusClass}">${statusText}</span></p>
-            <p>最后更新: ${d.iso || new Date(d.ts * 1000).toLocaleString()}</p>
-            <button onclick="showHistory('${d.uid}')" style="margin-top:8px; padding:4px 8px; border-radius:3px; border:1px solid #ddd;">查看历史记录</button>
+            <h3>Device ${d.uid} ${hasVoted ? '<small>(Voted)</small>' : ''}</h3>
+            <p>Current Temperature: ${d.temp}°C</p>
+            <p>Temperature Feeling: ${getVoteText(d.vote)}</p>
+            <p>Device Status: <span class="${statusClass}">${statusText}</span></p>
+            <p>Last Update: ${d.iso || new Date(d.ts * 1000).toLocaleString()}</p>
+            <button onclick="showHistory('${d.uid}')" style="margin-top:8px; padding:4px 8px; border-radius:3px; border:1px solid #ddd;">View History</button>
           </div>`;
       }
       html += '</div>';
@@ -202,11 +202,11 @@
       const updatesDiv = document.getElementById('updates');
       const time = new Date(data.ts * 1000).toLocaleString();
       const voteStatus = (data.vote !== null && data.vote !== undefined)
-        ? (isNewVote ? '提交了新投票' : '更新了投票')
-        : '更新了温度数据';
+        ? (isNewVote ? 'submitted a new vote' : 'updated vote')
+        : 'updated temperature data';
       const updateHtml = `
         <div class="update-item ${data.vote_tag || ''}">
-          [${time}] 设备 ${data.uid} ${voteStatus} - 当前温度: ${data.temp}°C, 感受: ${getVoteText(data.vote)}
+          [${time}] Device ${data.uid} ${voteStatus} - Current Temperature: ${data.temp}°C, Feeling: ${getVoteText(data.vote)}
         </div>`;
       updatesDiv.insertAdjacentHTML('afterbegin', updateHtml);
       if (updatesDiv.children.length > 50) updatesDiv.removeChild(updatesDiv.lastChild);
@@ -227,18 +227,18 @@
       statsError.style.display = 'none';
       statsError.textContent = '';
       statsDebug.textContent = '';
-      dominantVoteEl.textContent = '计算中...';
+      dominantVoteEl.textContent = 'Calculating...';
 
       const win = document.getElementById('vote-window').value;
-      const winText = ({'60':'1分钟','300':'5分钟','600':'10分钟','1800':'30分钟','3600':'1小时'})[win] || `${win}秒`;
+      const winText = ({'60':'1 minute','300':'5 minutes','600':'10 minutes','1800':'30 minutes','3600':'1 hour'})[win] || `${win} seconds`;
       timeWindowEl.textContent = winText;
 
       const url = api(`/api/vote_stats?window=${win}&t=${Date.now()}`);
       const nowTime = new Date().toLocaleTimeString();
-      statsDebug.textContent = `[${nowTime}] 正在获取统计数据…`;
+      statsDebug.textContent = `[${nowTime}] Fetching statistics…`;
 
       fetch(url, { method:'GET', cache:'no-store' })
-        .then(r => { statsDebug.textContent += ` 响应: ${r.status}`; if (!r.ok) throw new Error(`服务器错误: ${r.status}`); return r.json(); })
+        .then(r => { statsDebug.textContent += ` Response: ${r.status}`; if (!r.ok) throw new Error(`Server error: ${r.status}`); return r.json(); })
         .then(data => {
           const keys = Object.keys(data||{});
           const hasPerUid = keys.includes('per_uid');
@@ -256,29 +256,29 @@
           totalDevicesEl.textContent = totalVotedDevices;
           updateTimeEl.textContent = new Date((data.now || Date.now()/1000) * 1000).toLocaleString();
 
-          statsDebug.textContent = `[${nowTime}] 数据字段: ${JSON.stringify(keys)}`;
+          statsDebug.textContent = `[${nowTime}] Data fields: ${JSON.stringify(keys)}`;
           if (!hasPerUid && !Number.isFinite(data.device_count)) {
             statsDebug.classList.add('warning');
-            statsDebug.textContent += '（注意：缺少 per_uid / device_count，设备计数可能不准确）';
+            statsDebug.textContent += ' (Note: Missing per_uid / device_count, device count may be inaccurate)';
           }
 
           const maxVote = Math.max(cold, conf, warm);
-          dominantVoteEl.textContent = (maxVote === 0) ? '暂无有效投票'
-            : (cold === maxVote && conf === maxVote && warm === maxVote) ? '各执一词（势均力敌）'
-            : (cold === maxVote) ? '寒冷'
-            : (warm === maxVote) ? '温暖' : '适宜';
+          dominantVoteEl.textContent = (maxVote === 0) ? 'No valid votes yet'
+            : (cold === maxVote && conf === maxVote && warm === maxVote) ? 'Evenly divided'
+            : (cold === maxVote) ? 'Cold'
+            : (warm === maxVote) ? 'Warm' : 'Comfortable';
         })
         .catch(err => {
-          console.error('统计更新失败:', err);
+          console.error('Failed to update statistics:', err);
           statsError.style.display = 'block';
-          statsError.textContent = `获取统计数据失败：${err.message}`;
-          statsDebug.textContent += ` → 错误：${err.message}`;
+          statsError.textContent = `Failed to fetch statistics: ${err.message}`;
+          statsDebug.textContent += ` → Error: ${err.message}`;
         });
     }
 
     // ===== 历史记录 =====
     function voteClass(v) { if (v===1) return 'vote-warm'; if (v===0) return 'vote-conf'; if (v===-1) return 'vote-cold'; return ''; }
-    function getVoteText(v) { if (v===1) return '温暖'; if (v===-1) return '寒冷'; if (v===0) return '适宜'; if (v===null || v===undefined) return '未投票'; return '未知'; }
+    function getVoteText(v) { if (v===1) return 'Warm'; if (v===-1) return 'Cold'; if (v===0) return 'Comfortable'; if (v===null || v===undefined) return 'Not voted'; return 'Unknown'; }
 
     function showHistory(uid) {
       const dialog = document.getElementById('historyDialog');
@@ -286,14 +286,14 @@
       const title  = document.getElementById('historyTitle');
       const copyBtn= document.getElementById('copyHistoryBtn');
 
-      title.textContent = `设备 ${uid} 的历史记录`;
-      tbody.innerHTML = `<tr><td colspan="3">加载中…</td></tr>`;
+      title.textContent = `Device ${uid} History`;
+      tbody.innerHTML = `<tr><td colspan="3">Loading…</td></tr>`;
 
       fetch(api(`/api/temps/${uid}/history?${Date.now()}`))
         .then(r => r.json())
         .then(data => {
           const rows = (data.history || []).slice(-200);
-          if (!rows.length) { tbody.innerHTML = `<tr><td colspan="3">暂无历史记录</td></tr>`; return; }
+          if (!rows.length) { tbody.innerHTML = `<tr><td colspan="3">No history available</td></tr>`; return; }
 
           tbody.innerHTML = rows.map(it => {
             const t = new Date(it.ts * 1000).toLocaleString();
@@ -307,11 +307,11 @@
               rows.map(it => `${new Date(it.ts*1000).toISOString()},${it.temp ?? ''},${getVoteText(it.vote)},${it.vote}`)
             ).join('\n');
             navigator.clipboard.writeText(csv).then(() => {
-              copyBtn.textContent = '已复制'; setTimeout(() => copyBtn.textContent='复制为 CSV', 1200);
+              copyBtn.textContent = 'Copied!'; setTimeout(() => copyBtn.textContent='Copy as CSV', 1200);
             });
           };
         })
-        .catch(err => { tbody.innerHTML = `<tr><td colspan="3" style="color:#dc3545;">获取历史记录失败：${err.message}</td></tr>`; })
+        .catch(err => { tbody.innerHTML = `<tr><td colspan="3" style="color:#dc3545;">Failed to fetch history: ${err.message}</td></tr>`; })
         .finally(() => { if (!dialog.open) dialog.showModal(); });
 
       dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); }, { once:true });
